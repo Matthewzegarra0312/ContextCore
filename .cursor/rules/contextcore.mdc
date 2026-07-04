@@ -15,10 +15,11 @@ alwaysApply: true
 
 ## Trabajo en curso del equipo
 
-- **matthew-stephano-zegarra-ramos** en `packages/cli,docs,web`: Publicados @contextcore/core y @contextcore/cli en npm de verdad (registro publico)
+- **matthew-stephano-zegarra-ramos** en `packages/cli,services/summarizer,supabase`: Conectado el proyecto real de Supabase (dashboard en vivo + insert del CLI) y agregada carga automatica de .env
 
 ## Decisiones recientes
 
+- Se agrego dotenv al CLI y python-dotenv al summarizer: sin esto, crear un .env no tenia ningun efecto, ni Node ni Python lo cargan solos
 - El paquete del CLI paso de 'contextcore' (unscoped) a '@contextcore/cli' (scoped) porque npm bloqueo el nombre unscoped por similitud con el paquete existente 'context-core'
 - El paquete del CLI se renombro de @contextcore/cli a contextcore (sin scope) para que npx contextcore init funcione tal cual promete el pitch
 - @contextcore/core tambien se publica (publishConfig access public) porque el CLI lo necesita en runtime, no solo en el monorepo
@@ -26,18 +27,17 @@ alwaysApply: true
 - El commit de housekeeping (init + historial sembrado) deshabilita el hook temporalmente para no ensuciar 'trabajo en curso' con un evento meta
 - Paleta categorica del skill dataviz (8 colores validados) para identidad por autor, determinista via hash, nunca reasignada
 - Dashboard con fallback a datos de ejemplo (mockEvents) si NEXT_PUBLIC_SUPABASE_URL/ANON_KEY no estan seteados, para poder demostrarlo sin backend
-- Modelo claude-haiku-4-5 a proposito (barato/rapido, corre en cada commit del equipo)
 
 ## Gotchas conocidos
 
+- Supabase a veces activa RLS solo al crear una tabla desde el SQL editor; con RLS activado y sin politicas, tanto el insert del CLI como el select del dashboard quedan bloqueados por default
+- Correr todo el schema.sql de una vez falla si una linea ya se aplico antes (alter publication no es idempotente) y aborta la transaccion completa, incluyendo lineas posteriores que si hacian falta
 - npm exige 2FA para publicar y el scope @contextcore debe existir como organizacion antes de publicar bajo el, o falla con 404 Scope notfound
 - Tras un publish exitoso, 'npm view' puede devolver 404 por unos segundos hasta que el registro propaga — no es que el publish fallo
 - pnpm publish (no npm publish) es obligatorio en packages/cli: solo pnpm reescribe la dependencia workspace:* a un rango de version real al publicar
 - @contextcore/core debe publicarse antes que contextcore, o npm install fallaria buscando una version de core que todavia no existe en el registro
 - inferModule devolvia solo el primer segmento de ruta (ej. 'src'), demasiado generico para el pitch; se corrigio para usar dos segmentos cuando el primero es un directorio contenedor (src, packages, services, etc.)
 - Supabase Realtime es opt-in por tabla: hay que correr 'alter publication supabase_realtime add table context_events' o los INSERTs no llegan por websocket
-- Sin el servicio corriendo o SUMMARIZER_URL sin configurar, capture cae solo al fallback local (mensaje de commit) sin romper el commit
-- packages/core hay que recompilar (tsc) tras cada cambio de fuente, o el CLI en modo dev via tsx falla con 'no provee export' porque importa desde dist/
 
 ## Boundaries
 

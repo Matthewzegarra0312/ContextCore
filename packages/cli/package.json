@@ -36,7 +36,8 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@contextcore/core": "workspace:*"
+    "@contextcore/core": "workspace:*",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "typescript": "^5.5.4",

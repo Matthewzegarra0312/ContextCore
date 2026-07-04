@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import "dotenv/config";
 import { init } from "./commands/init.js";
 import { sync } from "./commands/sync.js";
 import { status } from "./commands/status.js";

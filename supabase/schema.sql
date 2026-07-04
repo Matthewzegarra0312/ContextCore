@@ -14,3 +14,9 @@ create table if not exists context_events (
 
 -- Sin esto, el dashboard no recibe INSERTs por websocket (Realtime es opt-in por tabla).
 alter publication supabase_realtime add table context_events;
+
+-- Sin políticas propias: con RLS activado (a veces Supabase lo prende solo al
+-- crear una tabla desde el editor) tanto el insert del CLI como el select del
+-- dashboard quedan bloqueados por default. Es un equipo interno sin auth por
+-- usuario en este MVP, así que se deja explícitamente desactivado.
+alter table context_events disable row level security;

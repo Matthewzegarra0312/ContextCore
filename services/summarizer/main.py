@@ -2,8 +2,11 @@ import json
 from typing import List
 
 from anthropic import Anthropic
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
+
+load_dotenv()
 
 app = FastAPI(title="ContextCore summarizer")
 client = Anthropic()
