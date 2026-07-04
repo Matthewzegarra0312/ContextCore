@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { detectStack, getContextCoreDir } from "@contextcore/core";
+import { detectStack, getContextCoreDir, installPostCommitHook } from "@contextcore/core";
 
 export async function init(): Promise<void> {
   const cwd = process.cwd();
@@ -28,4 +28,20 @@ export async function init(): Promise<void> {
   console.log(`[contextcore init] Stack detectado: ${stack.languages.join(", ") || "desconocido"}`);
   if (stack.frameworks.length) console.log(`[contextcore init] Frameworks: ${stack.frameworks.join(", ")}`);
   console.log(`[contextcore init] Escrito ${path.relative(cwd, contextMdPath)}`);
+
+  const hookResult = installPostCommitHook(cwd);
+  switch (hookResult) {
+    case "installed":
+      console.log("[contextcore init] Hook post-commit instalado (capture + sync automático en cada commit)");
+      break;
+    case "already-installed":
+      console.log("[contextcore init] Hook post-commit ya estaba instalado");
+      break;
+    case "skipped-existing":
+      console.log("[contextcore init] Aviso: ya existe un hook post-commit de otra herramienta, no se tocó. Añade a mano: npx contextcore capture && npx contextcore sync");
+      break;
+    case "not-a-repo":
+      console.log("[contextcore init] Aviso: no se detectó .git/ — hook no instalado");
+      break;
+  }
 }

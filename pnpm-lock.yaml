@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@contextcore/cli':
+        specifier: workspace:*
+        version: link:packages/cli
       typescript:
         specifier: ^5.5.4
         version: 5.9.3

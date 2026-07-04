@@ -1,0 +1,40 @@
+name: ContextCore sync
+
+# Opción B del Bloque 4: "único escritor". El hook local (post-commit)
+# solo recompila en el working tree de cada dev y nunca comitea; esta
+# Action es la que materializa el archivo compilado compartido en main.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter @contextcore/core build && pnpm --filter @contextcore/cli build
+
+      - run: node packages/cli/dist/index.js sync
+
+      - name: Commit del contexto compilado
+        run: |
+          git config user.name "contextcore-bot"
+          git config user.email "contextcore-bot@users.noreply.github.com"
+          git add AGENTS.md CLAUDE.md .cursor/rules/contextcore.mdc
+          git diff --cached --quiet || git commit -m "contextcore: sync automático [skip ci]"
+          git push
