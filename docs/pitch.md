@@ -24,7 +24,7 @@
 
 ## 5. Cierre (15s)
 
-> Está en npm hoy — `npx contextcore init` — y en una URL pública. No es una promesa para después del hackathon, es lo que acabamos de mostrar.
+> Está en npm hoy — `npm install -D @contextcore/cli && npx contextcore init` — y en una URL pública. No es una promesa para después del hackathon, es lo que acabamos de mostrar.
 
 ---
 

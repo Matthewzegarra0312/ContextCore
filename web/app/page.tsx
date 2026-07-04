@@ -15,12 +15,12 @@ export default function LandingPage() {
       <div className="mt-8 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4">
         <div className="text-xs text-[var(--text-muted)]">Empezar</div>
         <pre className="mt-2 overflow-x-auto rounded-md bg-[var(--page)] p-3 text-sm text-[var(--text-primary)]">
-          <code>npx contextcore init</code>
+          <code>{"npm install -D @contextcore/cli\nnpx contextcore init"}</code>
         </pre>
         <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Detecta el stack del repo, instala el hook <code>post-commit</code> y escribe el contexto
-          inicial. Cada commit después de esto actualiza <code>AGENTS.md</code>, <code>CLAUDE.md</code>{" "}
-          y <code>.cursor/rules/</code> solo.
+          inicial. Cada commit después de esto —con solo <code>npx contextcore</code>— actualiza{" "}
+          <code>AGENTS.md</code>, <code>CLAUDE.md</code> y <code>.cursor/rules/</code> solo.
         </p>
       </div>
 
