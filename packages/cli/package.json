@@ -1,0 +1,21 @@
+{
+  "name": "@contextcore/cli",
+  "version": "0.0.1",
+  "type": "module",
+  "bin": {
+    "contextcore": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@contextcore/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "tsx": "^4.16.2",
+    "@types/node": "^20.14.11"
+  }
+}
