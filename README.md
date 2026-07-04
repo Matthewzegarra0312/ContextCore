@@ -6,11 +6,13 @@ Memoria compartida y viva para agentes de código de equipo. Ver [ContextCore.md
 
 ```
 contextcore/
-├─ packages/cli/          # binario contextcore (TS) — init / sync / status
-├─ packages/core/         # tipos compartidos + motor de compilación (TS)
+├─ packages/cli/          # paquete npm "contextcore" — init / sync / status / log / capture
+├─ packages/core/         # paquete npm "@contextcore/core" — motor de compilación
 ├─ services/summarizer/   # FastAPI: diff -> evento (Python, opcional)
 ├─ web/                   # Next.js + Tailwind: landing (/) + dashboard (/dashboard)
-├─ demo/                  # repo de ejemplo para la demo split-screen
+├─ demo/                  # repo de ejemplo (git separado, gitignoreado) para la demo split-screen
+├─ scripts/setup-demo.sh  # regenera demo/ de forma reproducible
+├─ docs/                  # guion de la demo, checklist de publicación
 └─ .contextcore/          # logs append-only por dev (<autor>.jsonl)
 ```
 
@@ -18,9 +20,17 @@ contextcore/
 
 ```bash
 pnpm install
-pnpm --filter @contextcore/cli dev -- init
+pnpm --filter contextcore dev -- init
 ```
+
+## Demo
+
+```bash
+sh scripts/setup-demo.sh   # regenera demo/ con historial real + ContextCore inicializado
+```
+
+Ver `docs/demo-script.md` para el guion de los dos actos.
 
 ## Estado
 
-Bloque 0 (setup + contrato del evento) completo. Ver tabla de bloques en `ContextCore.md` §6.
+Bloques 0–5 completos (CLI, resumen semántico, compilador, automatización git, dashboard, demo). Ver `ContextCore.md` §6 y `docs/publishing.md` para el Bloque 7 (publicar en npm).

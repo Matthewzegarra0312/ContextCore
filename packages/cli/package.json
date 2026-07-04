@@ -1,14 +1,36 @@
 {
-  "name": "@contextcore/cli",
-  "version": "0.0.1",
+  "name": "contextcore",
+  "version": "0.1.0",
+  "description": "Memoria compartida y viva para los agentes de código de tu equipo — mantiene AGENTS.md/CLAUDE.md/.cursor/rules sincronizados con lo que el equipo está haciendo de verdad.",
   "type": "module",
   "bin": {
     "contextcore": "./dist/index.js"
   },
   "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "agents.md",
+    "claude-code",
+    "cursor",
+    "ai-agents",
+    "context",
+    "developer-tools"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Matthewzegarra0312/ContextCore",
+    "directory": "packages/cli"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@contextcore/core": "workspace:*"
