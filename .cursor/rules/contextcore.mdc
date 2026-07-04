@@ -15,20 +15,22 @@ alwaysApply: true
 
 ## Trabajo en curso del equipo
 
-- **matthew-stephano-zegarra-ramos** en `services/summarizer,packages/core`: Bloque 2: servicio FastAPI de resumen semantico + integracion best-effort en contextcore capture
+- **matthew-stephano-zegarra-ramos** en `web,supabase`: Bloque 1b/6: dashboard Next.js + Tailwind (landing y /dashboard) con Supabase Realtime
 
 ## Decisiones recientes
 
+- Paleta categorica del skill dataviz (8 colores validados) para identidad por autor, determinista via hash, nunca reasignada
+- Dashboard con fallback a datos de ejemplo (mockEvents) si NEXT_PUBLIC_SUPABASE_URL/ANON_KEY no estan seteados, para poder demostrarlo sin backend
 - Modelo claude-haiku-4-5 a proposito (barato/rapido, corre en cada commit del equipo)
 - Structured outputs (output_config.format json_schema) en vez de pedirle al modelo que devuelva JSON en texto libre, para no depender de parseo fragil
 - CLAUDE.md se escribe como copia real de AGENTS.md, no symlink: en Windows un symlink pide privilegios elevados y esto tiene que andar sin friccion en la demo
 - Presupuesto de tokens (~2000): se recortan primero los gotchas mas viejos, luego las decisiones mas viejas; overview y trabajo en curso nunca se truncan
 - Se agrego el comando log (no estaba en el doc original) para poder generar eventos antes de que existan el summarizer y el git hook
 - Insert a Supabase es best-effort: si faltan SUPABASE_URL/SUPABASE_ANON_KEY, no-op silencioso, el CLI sigue offline
-- ContextEvent minimal: author/timestamp/module/intent/decisions/gotchas, sin campos extra
 
 ## Gotchas conocidos
 
+- Supabase Realtime es opt-in por tabla: hay que correr 'alter publication supabase_realtime add table context_events' o los INSERTs no llegan por websocket
 - Sin el servicio corriendo o SUMMARIZER_URL sin configurar, capture cae solo al fallback local (mensaje de commit) sin romper el commit
 - packages/core hay que recompilar (tsc) tras cada cambio de fuente, o el CLI en modo dev via tsx falla con 'no provee export' porque importa desde dist/
 - detectStack no detectaba TypeScript en la raiz del monorepo porque solo miraba tsconfig.json y no tsconfig.base.json; corregido sumando ese chequeo
