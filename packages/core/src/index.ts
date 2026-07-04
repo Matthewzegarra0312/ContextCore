@@ -5,3 +5,5 @@ export { getAuthor } from "./author.js";
 export { getContextCoreDir, getAuthorLogPath } from "./paths.js";
 export { appendEvent, readAllEvents } from "./storage.js";
 export { insertEventBestEffort } from "./supabase.js";
+export type { CompiledContext, CompiledOutputPaths } from "./compile.js";
+export { compile, writeCompiledOutputs } from "./compile.js";
