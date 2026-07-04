@@ -8,3 +8,7 @@ dist/
 __pycache__/
 *.pyc
 .venv/
+
+# demo/ es un repo git separado (target de ejemplo para el Bloque 5),
+# regenerado por scripts/setup-demo.sh — no lo versiona el monorepo.
+demo/

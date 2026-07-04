@@ -2,9 +2,20 @@ import { getAuthor } from "./author.js";
 import { git } from "./gitHelpers.js";
 import type { ContextEvent } from "./types.js";
 
+// Directorios contenedor genéricos: el primer segmento solo no dice nada
+// ("src" en casi cualquier repo), así que para estos se usa el segundo
+// también (ej. "src/notifications", "packages/core").
+const CONTAINER_DIRS = new Set(["src", "lib", "app", "apps", "packages", "services", "test", "tests"]);
+
+function moduleSegment(file: string): string {
+  const parts = file.split("/");
+  if (parts.length > 2 && CONTAINER_DIRS.has(parts[0])) return `${parts[0]}/${parts[1]}`;
+  return parts[0];
+}
+
 function inferModule(files: string[]): string {
   if (files.length === 0) return "sin-cambios";
-  const topDirs = [...new Set(files.map((f) => f.split("/")[0]))];
+  const topDirs = [...new Set(files.map(moduleSegment))];
   if (topDirs.length <= 3) return topDirs.join(", ");
   return `${topDirs.slice(0, 3).join(", ")} (+${topDirs.length - 3} más)`;
 }

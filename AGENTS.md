@@ -10,21 +10,22 @@
 
 ## Trabajo en curso del equipo
 
-- **matthew-stephano-zegarra-ramos** en `web,supabase`: Bloque 1b/6: dashboard Next.js + Tailwind (landing y /dashboard) con Supabase Realtime
+- **matthew-stephano-zegarra-ramos** en `scripts,docs`: Bloque 5: repo demo/ (target de ejemplo con historial real) + guion de los dos actos
 
 ## Decisiones recientes
 
+- demo/ es un repo git separado y gitignoreado por el monorepo; se versiona scripts/setup-demo.sh, no el contenido generado, para que cualquiera lo regenere identico
+- El commit de housekeeping (init + historial sembrado) deshabilita el hook temporalmente para no ensuciar 'trabajo en curso' con un evento meta
 - Paleta categorica del skill dataviz (8 colores validados) para identidad por autor, determinista via hash, nunca reasignada
 - Dashboard con fallback a datos de ejemplo (mockEvents) si NEXT_PUBLIC_SUPABASE_URL/ANON_KEY no estan seteados, para poder demostrarlo sin backend
 - Modelo claude-haiku-4-5 a proposito (barato/rapido, corre en cada commit del equipo)
 - Structured outputs (output_config.format json_schema) en vez de pedirle al modelo que devuelva JSON en texto libre, para no depender de parseo fragil
 - CLAUDE.md se escribe como copia real de AGENTS.md, no symlink: en Windows un symlink pide privilegios elevados y esto tiene que andar sin friccion en la demo
 - Presupuesto de tokens (~2000): se recortan primero los gotchas mas viejos, luego las decisiones mas viejas; overview y trabajo en curso nunca se truncan
-- Se agrego el comando log (no estaba en el doc original) para poder generar eventos antes de que existan el summarizer y el git hook
-- Insert a Supabase es best-effort: si faltan SUPABASE_URL/SUPABASE_ANON_KEY, no-op silencioso, el CLI sigue offline
 
 ## Gotchas conocidos
 
+- inferModule devolvia solo el primer segmento de ruta (ej. 'src'), demasiado generico para el pitch; se corrigio para usar dos segmentos cuando el primero es un directorio contenedor (src, packages, services, etc.)
 - Supabase Realtime es opt-in por tabla: hay que correr 'alter publication supabase_realtime add table context_events' o los INSERTs no llegan por websocket
 - Sin el servicio corriendo o SUMMARIZER_URL sin configurar, capture cae solo al fallback local (mensaje de commit) sin romper el commit
 - packages/core hay que recompilar (tsc) tras cada cambio de fuente, o el CLI en modo dev via tsx falla con 'no provee export' porque importa desde dist/
