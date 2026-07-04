@@ -1,14 +1,6 @@
-import { execSync } from "node:child_process";
 import { getAuthor } from "./author.js";
+import { git } from "./gitHelpers.js";
 import type { ContextEvent } from "./types.js";
-
-function git(args: string, cwd: string): string {
-  try {
-    return execSync(`git ${args}`, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
-  } catch {
-    return "";
-  }
-}
 
 function inferModule(files: string[]): string {
   if (files.length === 0) return "sin-cambios";
@@ -25,9 +17,10 @@ function extractTrailers(body: string, key: "decision" | "gotcha"): string[] {
   return out;
 }
 
-// Fallback sin LLM mientras no exista el summarizer (Bloque 2): usa el
-// mensaje de commit como intent, y trailers "decision:"/"gotcha:" en el
-// cuerpo del commit como convención barata para enriquecer el evento.
+// Fallback sin LLM: se usa cuando SUMMARIZER_URL no está configurado o el
+// servicio no responde (ver llmCapture.ts). Usa el mensaje de commit como
+// intent, y trailers "decision:"/"gotcha:" en el cuerpo como convención
+// barata para enriquecer el evento sin depender de la IA.
 // Ej: git commit -m "Retry con backoff" -m "decision: sin cola por simplicidad"
 export function buildEventFromLastCommit(cwd: string = process.cwd()): ContextEvent {
   const subject = git("log -1 --pretty=%s", cwd) || "Commit sin mensaje";

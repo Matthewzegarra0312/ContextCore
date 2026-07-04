@@ -1,8 +1,17 @@
-import { buildEventFromLastCommit, appendEvent, insertEventBestEffort } from "@contextcore/core";
+import {
+  buildEventFromLastCommit,
+  captureEventViaSummarizer,
+  appendEvent,
+  insertEventBestEffort,
+} from "@contextcore/core";
 
 export async function capture(): Promise<void> {
-  const event = buildEventFromLastCommit();
+  const llmEvent = await captureEventViaSummarizer();
+  const event = llmEvent ?? buildEventFromLastCommit();
+
   appendEvent(event);
   await insertEventBestEffort(event);
-  console.log(`[contextcore capture] Evento registrado desde el último commit por ${event.author} en ${event.module}`);
+
+  const source = llmEvent ? "resumen IA" : "mensaje de commit (fallback)";
+  console.log(`[contextcore capture] Evento registrado (${source}) por ${event.author} en ${event.module}`);
 }

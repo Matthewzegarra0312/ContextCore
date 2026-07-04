@@ -8,5 +8,6 @@ export { insertEventBestEffort } from "./supabase.js";
 export type { CompiledContext, CompiledOutputPaths } from "./compile.js";
 export { compile, writeCompiledOutputs } from "./compile.js";
 export { buildEventFromLastCommit } from "./captureFromCommit.js";
+export { captureEventViaSummarizer } from "./llmCapture.js";
 export type { HookInstallResult } from "./gitHook.js";
 export { installPostCommitHook } from "./gitHook.js";
