@@ -9,8 +9,21 @@ let client: SupabaseClient | null | undefined;
 // (no solo localStorage) para que el middleware pueda leerla en el server.
 export function getSupabaseBrowserClient(): SupabaseClient | null {
   if (client !== undefined) return client;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  client = url && key ? createBrowserClient(url, key) : null;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  if (!url || !key) {
+    client = null;
+    return client;
+  }
+  try {
+    client = createBrowserClient(url, key);
+  } catch (err) {
+    // Un valor malformado (URL inválida, comillas o espacios al pegar en el
+    // panel de env vars) haría que createBrowserClient lance una excepción
+    // síncrona durante el render y tumbe toda la app. Degradamos a datos de
+    // ejemplo, igual que cuando no hay credenciales.
+    console.error("[contextcore] Supabase browser client inválido:", err);
+    client = null;
+  }
   return client;
 }
