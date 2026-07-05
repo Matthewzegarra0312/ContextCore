@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Google Fonts: Inter ────────────────────────────────*/
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* ─── Light theme (default) ─────────────────────────── */
 :root {
-  --page: #f9f9f7;
-  --surface: #fcfcfb;
+  --page: #f4f4f2;
+  --surface: #ffffff;
   --text-primary: #0b0b0b;
   --text-secondary: #52514e;
   --text-muted: #898781;
@@ -13,8 +17,8 @@
 
   --good: #0ca30c;
 
-  --series-1: #2a78d6; /* blue */
-  --series-2: #1baf7a; /* aqua */
+  --series-1: #2a78d6; /* blue  */
+  --series-2: #1baf7a; /* aqua  */
   --series-3: #eda100; /* yellow */
   --series-4: #008300; /* green */
   --series-5: #4a3aa7; /* violet */
@@ -23,30 +27,174 @@
   --series-8: #eb6834; /* orange */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --page: #0d0d0d;
-    --surface: #1a1a19;
-    --text-primary: #ffffff;
-    --text-secondary: #c3c2b7;
-    --text-muted: #898781;
-    --border: rgba(255, 255, 255, 0.1);
-    --gridline: #2c2c2a;
+/* ─── Dark theme ─────────────────────────────────────── */
+.dark {
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --border: rgba(255, 255, 255, 0.1);
+  --gridline: #2c2c2a;
 
-    --good: #0ca30c;
+  --good: #0ca30c;
 
-    --series-1: #3987e5;
-    --series-2: #199e70;
-    --series-3: #c98500;
-    --series-4: #008300;
-    --series-5: #9085e9;
-    --series-6: #e66767;
-    --series-7: #d55181;
-    --series-8: #d95926;
-  }
+  --series-1: #3987e5;
+  --series-2: #199e70;
+  --series-3: #c98500;
+  --series-4: #008300;
+  --series-5: #9085e9;
+  --series-6: #e66767;
+  --series-7: #d55181;
+  --series-8: #d95926;
 }
+
+/* ─── Base ───────────────────────────────────────────── */
 
 body {
   background: var(--page);
   color: var(--text-primary);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Terminal cursor blink ──────────────────────────── */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* ─── Theme toggle spin ──────────────────────────────── */
+@keyframes spin-in {
+  from {
+    transform: rotate(-90deg) scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.theme-icon-enter {
+  animation: spin-in 0.25s ease forwards;
+}
+
+/* ─── Card entrance animation ────────────────────────── */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-enter {
+  animation: card-enter 0.35s ease both;
+}
+
+/* ─── Section fade-in ────────────────────────────────── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.45s ease both;
+}
+
+/* ─── Bar chart grow ─────────────────────────────────── */
+@keyframes bar-grow {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  to {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}
+
+.bar-grow {
+  animation: bar-grow 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ─── Glassmorphism utility ──────────────────────────── */
+.glass-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  border: 1px solid var(--border);
+}
+
+/* ─── Gradient heading separator ─────────────────────── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--border) 20%,
+    var(--border) 80%,
+    transparent
+  );
+  margin: 0.5rem 0;
+}
+
+/* ─── Token budget bar ───────────────────────────────── */
+.token-bar {
+  height: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #4ade80, #3b82f6);
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── Reduced motion ─────────────────────────────────── */
+/* Respect user preference: keep the UI fully usable but remove
+   decorative motion (entrances, spins, bar growth, pulsing dots). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .fade-up,
+  .card-enter,
+  .bar-grow,
+  .theme-icon-enter,
+  .cursor-blink {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ─── View Transitions (language switch crossfade) ───── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.25s;
+  animation-timing-function: ease;
 }
