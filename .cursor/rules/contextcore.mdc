@@ -15,7 +15,7 @@ alwaysApply: true
 
 ## Trabajo en curso del equipo
 
-- **matthew-stephano-zegarra-ramos** en `packages/cli,services/summarizer,supabase`: Conectado el proyecto real de Supabase (dashboard en vivo + insert del CLI) y agregada carga automatica de .env
+- **matthew-stephano-zegarra-ramos** en `.contextcore, .cursor, AGENTS.md (+5 más)`: Conectado Supabase real + fix critico de carga de .env
 
 ## Decisiones recientes
 

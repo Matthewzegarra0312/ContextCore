@@ -2,7 +2,7 @@
 export const en = {
   common: {
     brand: "ContextCore",
-    dashboardLink: "Dashboard",
+    dashboardLink: "Sign in",
     githubLink: "GitHub",
   },
   landing: {
@@ -11,7 +11,7 @@ export const en = {
     heroTitleHighlight: "coding agents",
     heroSubtitle:
       "They stop rediscovering the repo every session — your team sees its shared \u201cbrain\u201d in a real-time dashboard.",
-    ctaDashboard: "View the dashboard \u2192",
+    ctaDashboard: "Sign in \u2192",
     ctaGithub: "GitHub",
     installLabel: "Get started",
     installTitle: "Get started in two commands",
@@ -50,6 +50,25 @@ export const en = {
   liveDot: {
     live: "Live (Supabase Realtime)",
     mock: "Sample data (Supabase not configured)",
+  },
+  auth: {
+    loginTitle: "Sign in to ContextCore",
+    loginSubtitle: "Sign in with GitHub to access your team's live dashboard.",
+    continueWithGithub: "Continue with GitHub",
+    loadingSession: "Checking session\u2026",
+    loginError: "Couldn't sign in. Please try again.",
+    notConfigured: "Supabase isn't configured in this environment.",
+    backToHome: "Back to home",
+    logout: "Sign out",
+    signedInAs: "Signed in as",
+    cliTitle: "Authorize the ContextCore CLI",
+    cliSubtitle: "Make sure this code matches the one shown in your terminal before authorizing.",
+    cliCodeLabel: "Verification code",
+    cliAuthorize: "Authorize CLI",
+    cliAuthorizing: "Authorizing\u2026",
+    cliSuccessTitle: "CLI authorized!",
+    cliSuccessSubtitle: "You can go back to your terminal now.",
+    cliInvalid: "This authorization link is invalid or has expired.",
   },
   themeToggle: {
     ariaToLight: "Switch to light mode",

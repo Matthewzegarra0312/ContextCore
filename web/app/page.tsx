@@ -63,7 +63,7 @@ export default function LandingPage() {
 
           <nav className="flex items-center gap-2 sm:gap-3">
             <Link
-              href="/dashboard"
+              href="/login"
               className="rounded-md px-2 py-1.5 text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--series-1)]"
             >
               {t("common.dashboardLink")}
@@ -109,7 +109,7 @@ export default function LandingPage() {
 
             <div className="flex flex-wrap gap-3">
               <Link
-                href="/dashboard"
+                href="/login"
                 className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:brightness-110 hover:shadow-lg active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--series-1)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--page)]"
                 style={{ background: "var(--series-1)" }}
               >

@@ -4,7 +4,7 @@ import type { Dictionary } from "./en";
 export const es: Dictionary = {
   common: {
     brand: "ContextCore",
-    dashboardLink: "Dashboard",
+    dashboardLink: "Acceder",
     githubLink: "GitHub",
   },
   landing: {
@@ -13,7 +13,7 @@ export const es: Dictionary = {
     heroTitleHighlight: "agentes de c\u00f3digo",
     heroSubtitle:
       "Dejan de redescubrir el repo en cada sesi\u00f3n \u2014 el equipo ve su \u201ccerebro com\u00fan\u201d en un dashboard en tiempo real.",
-    ctaDashboard: "Ver el dashboard \u2192",
+    ctaDashboard: "Acceder \u2192",
     ctaGithub: "GitHub",
     installLabel: "Empezar",
     installTitle: "Empezar en dos comandos",
@@ -52,6 +52,25 @@ export const es: Dictionary = {
   liveDot: {
     live: "En vivo (Supabase Realtime)",
     mock: "Datos de ejemplo (Supabase no configurado)",
+  },
+  auth: {
+    loginTitle: "Inicia sesi\u00f3n en ContextCore",
+    loginSubtitle: "Inicia sesi\u00f3n con GitHub para acceder al dashboard en vivo de tu equipo.",
+    continueWithGithub: "Continuar con GitHub",
+    loadingSession: "Verificando sesi\u00f3n\u2026",
+    loginError: "No se pudo iniciar sesi\u00f3n. Intenta de nuevo.",
+    notConfigured: "Supabase no est\u00e1 configurado en este entorno.",
+    backToHome: "Volver al inicio",
+    logout: "Cerrar sesi\u00f3n",
+    signedInAs: "Sesi\u00f3n iniciada como",
+    cliTitle: "Autorizar el CLI de ContextCore",
+    cliSubtitle: "Verifica que este c\u00f3digo coincida con el que aparece en tu terminal antes de autorizar.",
+    cliCodeLabel: "C\u00f3digo de verificaci\u00f3n",
+    cliAuthorize: "Autorizar CLI",
+    cliAuthorizing: "Autorizando\u2026",
+    cliSuccessTitle: "\u00a1CLI autorizado!",
+    cliSuccessSubtitle: "Ya puedes volver a tu terminal.",
+    cliInvalid: "Este enlace de autorizaci\u00f3n no es v\u00e1lido o ya expir\u00f3.",
   },
   themeToggle: {
     ariaToLight: "Cambiar a modo claro",
