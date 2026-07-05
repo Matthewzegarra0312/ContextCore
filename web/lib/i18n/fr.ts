@@ -4,7 +4,7 @@ import type { Dictionary } from "./en";
 export const fr: Dictionary = {
   common: {
     brand: "ContextCore",
-    dashboardLink: "Tableau de bord",
+    dashboardLink: "Se connecter",
     githubLink: "GitHub",
   },
   landing: {
@@ -13,7 +13,7 @@ export const fr: Dictionary = {
     heroTitleHighlight: "agents de code",
     heroSubtitle:
       "Ils arr\u00eatent de red\u00e9couvrir le d\u00e9p\u00f4t \u00e0 chaque session \u2014 votre \u00e9quipe voit son \u00ab\u00a0cerveau commun\u00a0\u00bb dans un tableau de bord en temps r\u00e9el.",
-    ctaDashboard: "Voir le tableau de bord \u2192",
+    ctaDashboard: "Se connecter \u2192",
     ctaGithub: "GitHub",
     installLabel: "D\u00e9marrer",
     installTitle: "D\u00e9marrez en deux commandes",
@@ -52,6 +52,25 @@ export const fr: Dictionary = {
   liveDot: {
     live: "En direct (Supabase Realtime)",
     mock: "Donn\u00e9es d'exemple (Supabase non configur\u00e9)",
+  },
+  auth: {
+    loginTitle: "Connectez-vous \u00e0 ContextCore",
+    loginSubtitle: "Connectez-vous avec GitHub pour acc\u00e9der au tableau de bord en direct de votre \u00e9quipe.",
+    continueWithGithub: "Continuer avec GitHub",
+    loadingSession: "V\u00e9rification de la session\u2026",
+    loginError: "Impossible de se connecter. R\u00e9essayez.",
+    notConfigured: "Supabase n'est pas configur\u00e9 dans cet environnement.",
+    backToHome: "Retour \u00e0 l'accueil",
+    logout: "Se d\u00e9connecter",
+    signedInAs: "Connect\u00e9 en tant que",
+    cliTitle: "Autoriser le CLI ContextCore",
+    cliSubtitle: "V\u00e9rifiez que ce code correspond \u00e0 celui affich\u00e9 dans votre terminal avant d'autoriser.",
+    cliCodeLabel: "Code de v\u00e9rification",
+    cliAuthorize: "Autoriser le CLI",
+    cliAuthorizing: "Autorisation en cours\u2026",
+    cliSuccessTitle: "CLI autoris\u00e9\u00a0!",
+    cliSuccessSubtitle: "Vous pouvez retourner \u00e0 votre terminal.",
+    cliInvalid: "Ce lien d'autorisation n'est pas valide ou a expir\u00e9.",
   },
   themeToggle: {
     ariaToLight: "Passer en mode clair",

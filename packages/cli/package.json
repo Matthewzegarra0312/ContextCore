@@ -33,15 +33,18 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsx src/index.ts",
+    "gen:logo": "node scripts/gen-logo.mjs",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@contextcore/core": "workspace:*",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "picocolors": "^1.1.1"
   },
   "devDependencies": {
     "typescript": "^5.5.4",
     "tsx": "^4.16.2",
-    "@types/node": "^20.14.11"
+    "@types/node": "^20.14.11",
+    "sharp": "^0.33.5"
   }
 }

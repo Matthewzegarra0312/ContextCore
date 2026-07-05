@@ -20,3 +20,23 @@ alter publication supabase_realtime add table context_events;
 -- dashboard quedan bloqueados por default. Es un equipo interno sin auth por
 -- usuario en este MVP, así que se deja explícitamente desactivado.
 alter table context_events disable row level security;
+
+-- ── Login del CLI (device-code flow, estilo `gh auth login` / Claude Code) ──
+-- Fila efímera que sirve de "buzón" entre `contextcore login` (que hace polling)
+-- y la pestaña del navegador donde el usuario autoriza con GitHub. Nunca se
+-- expone al cliente anon: solo la Service Role (rutas /api/cli/*) la toca.
+create table if not exists cli_auth_sessions (
+  id uuid primary key default gen_random_uuid(),
+  device_secret text not null,
+  status text not null default 'pending' check (status in ('pending', 'complete')),
+  user_id uuid references auth.users (id) on delete cascade,
+  access_token text,
+  refresh_token text,
+  github_login text,
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null default now() + interval '10 minutes'
+);
+
+-- RLS activado sin políticas: solo la Service Role (que lo bypassea) puede
+-- leer/escribir esta tabla desde las API routes del dashboard.
+alter table cli_auth_sessions enable row level security;

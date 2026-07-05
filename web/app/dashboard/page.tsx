@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { getSupabaseClient } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
+import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import { mockEvents } from "@/lib/mockEvents";
 import type { ContextEventRow } from "@/lib/types";
 import { relativeTime } from "@/lib/relativeTime";
@@ -48,14 +50,26 @@ function SectionHeading({
 export default function DashboardPage() {
   const t = useT();
   const locale = useLocale();
+  const router = useRouter();
   const [events, setEvents] = useState<ContextEventRow[]>(mockEvents);
   const [connected, setConnected] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const supabase = getSupabaseClient();
+    const supabase = getSupabaseBrowserClient();
     if (!supabase) return;
 
     let active = true;
+
+    supabase.auth.getUser().then(({ data }) => {
+      if (active) setUser(data.user ?? null);
+    });
+
+    const {
+      data: { subscription: authSubscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
 
     supabase
       .from("context_events")
@@ -83,9 +97,18 @@ export default function DashboardPage() {
 
     return () => {
       active = false;
+      authSubscription.unsubscribe();
       supabase.removeChannel(channel);
     };
   }, []);
+
+  async function handleLogout() {
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) return;
+    await supabase.auth.signOut();
+    router.push("/login");
+    router.refresh();
+  }
 
   const latestByAuthor = useMemo(() => {
     const map = new Map<string, ContextEventRow>();
@@ -109,6 +132,13 @@ export default function DashboardPage() {
     [events]
   );
   const lastActivity = events[0] ? relativeTime(events[0].timestamp, locale) : "—";
+
+  const userLabel =
+    (user?.user_metadata?.user_name as string | undefined) ||
+    (user?.user_metadata?.preferred_username as string | undefined) ||
+    user?.email ||
+    null;
+  const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
 
   return (
     <div className="min-h-screen bg-[var(--page)]">
@@ -145,6 +175,29 @@ export default function DashboardPage() {
             </div>
             <LanguageSwitcher />
             <ThemeToggle />
+            {userLabel && (
+              <div className="flex items-center gap-2 border-l border-[var(--border)] pl-2 sm:pl-3">
+                {avatarUrl && (
+                  <Image
+                    src={avatarUrl}
+                    alt={userLabel}
+                    width={24}
+                    height={24}
+                    className="h-6 w-6 rounded-full"
+                  />
+                )}
+                <span className="hidden max-w-[8rem] truncate text-xs text-[var(--text-secondary)] md:inline">
+                  {userLabel}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="rounded-md px-2 py-1 text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+                  title={t("auth.logout")}
+                >
+                  {t("auth.logout")}
+                </button>
+              </div>
+            )}
           </div>
         </div>
         {/* LiveDot on its own row for small screens, so it never gets squeezed */}
