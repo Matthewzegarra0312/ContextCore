@@ -6,6 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
+    "prepare": "node scripts/install-hook.mjs",
     "build": "pnpm -r --filter=./packages/** build",
     "dev:cli": "pnpm --filter @contextcore/cli dev",
     "dev:web": "pnpm --filter web dev"

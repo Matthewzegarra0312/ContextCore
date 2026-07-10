@@ -34,7 +34,7 @@
 No: el archivo es el estándar, pero nadie lo mantiene a mano — se pudre en semanas. ContextCore es la automatización que lo mantiene vivo, resumido y sincronizado, más la capa visible para el equipo humano (el archivo no le sirve a nadie que no abra un editor).
 
 **"¿Conflictos de merge en el archivo compartido?"**
-Resueltos por diseño: cada dev escribe solo en su propio `.jsonl` append-only. El archivo compilado (`AGENTS.md`/`CLAUDE.md`/`.cursor/rules`) tiene un único escritor — la GitHub Action en merge a `main` — nunca se edita a mano.
+Poco frecuentes por diseño: todo el equipo escribe en un único `context.jsonl`, pero siempre en modo *append* (una línea nueva al final, nunca se reescriben líneas existentes), así que git resuelve la gran mayoría de los casos solo. El archivo compilado (`AGENTS.md`/`CLAUDE.md`/`.cursor/rules`) tiene un único escritor — la GitHub Action en merge a `main` — nunca se edita a mano.
 
 **"¿No es esto lo mismo que `git log`?"**
 No: `git log` da el qué. Nosotros resumimos el porqué — intención, decisiones tomadas, gotchas descubiertos — que es exactamente lo que un `git log` *no* te dice, y lo que un LLM necesita para no volver a cometer el mismo error.

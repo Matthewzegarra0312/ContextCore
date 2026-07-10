@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { ContextEvent } from "./types.js";
-import { getContextCoreDir, getAuthorLogPath } from "./paths.js";
+import { getContextCoreDir, getEventsLogPath } from "./paths.js";
 
 export function appendEvent(event: ContextEvent, cwd: string = process.cwd()): void {
   const dir = getContextCoreDir(cwd);
   fs.mkdirSync(dir, { recursive: true });
-  const logPath = getAuthorLogPath(event.author, cwd);
+  const logPath = getEventsLogPath(cwd);
   fs.appendFileSync(logPath, JSON.stringify(event) + "\n", "utf8");
 }
 

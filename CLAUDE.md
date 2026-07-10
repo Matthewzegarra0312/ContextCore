@@ -37,4 +37,4 @@
 ## Boundaries
 
 - No edites `AGENTS.md`, `CLAUDE.md`, `.cursor/rules/contextcore.mdc` ni `.contextcore/context.md` a mano — se regeneran con `contextcore sync`.
-- No edites los `.contextcore/*.jsonl` a mano — son append-only, un archivo por autor.
+- No edites `.contextcore/context.jsonl` a mano — es append-only y compartido por todo el equipo (cada línea incluye el autor).
