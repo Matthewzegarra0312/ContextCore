@@ -15,11 +15,24 @@ create table if not exists context_events (
 -- Sin esto, el dashboard no recibe INSERTs por websocket (Realtime es opt-in por tabla).
 alter publication supabase_realtime add table context_events;
 
--- Sin políticas propias: con RLS activado (a veces Supabase lo prende solo al
--- crear una tabla desde el editor) tanto el insert del CLI como el select del
--- dashboard quedan bloqueados por default. Es un equipo interno sin auth por
--- usuario en este MVP, así que se deja explícitamente desactivado.
-alter table context_events disable row level security;
+-- RLS activado. Sin políticas, RLS bloquea TODO por default (ese era el motivo
+-- por el que antes se desactivaba). Aquí abrimos solo lo que la app necesita:
+-- SELECT (dashboard) e INSERT (CLI, anónimo o autenticado). A propósito NO hay
+-- políticas de UPDATE/DELETE, así esas operaciones quedan bloqueadas para anon
+-- y authenticated — solo la Service Role (que bypassea RLS) puede modificarlas.
+-- Esto cierra el hallazgo "RLS Disabled in Public" del Security Advisor sin
+-- exigir login en el CLI. Idempotente para poder re-correr el schema.
+alter table context_events enable row level security;
+
+drop policy if exists "context_events_select" on context_events;
+create policy "context_events_select"
+  on context_events for select
+  using (true);
+
+drop policy if exists "context_events_insert" on context_events;
+create policy "context_events_insert"
+  on context_events for insert
+  with check (true);
 
 -- ── Login del CLI (device-code flow, estilo `gh auth login` / Claude Code) ──
 -- Fila efímera que sirve de "buzón" entre `contextcore login` (que hace polling)
