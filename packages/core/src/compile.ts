@@ -3,6 +3,7 @@ import path from "node:path";
 import type { ContextEvent } from "./types.js";
 import { readAllEvents } from "./storage.js";
 import { detectStack } from "./detectStack.js";
+import { getContextCoreDir } from "./paths.js";
 
 const TOKEN_BUDGET = 2000;
 const MAX_ITEMS_PER_SECTION = 8;
@@ -84,7 +85,7 @@ export function compile(cwd: string = process.cwd()): CompiledContext {
   const boundaries = renderSection(
     "Boundaries",
     [
-      "- No edites `AGENTS.md`, `CLAUDE.md` ni `.cursor/rules/contextcore.mdc` a mano — se regeneran con `contextcore sync`.",
+      "- No edites `AGENTS.md`, `CLAUDE.md`, `.cursor/rules/contextcore.mdc` ni `.contextcore/context.md` a mano — se regeneran con `contextcore sync`.",
       "- No edites los `.contextcore/*.jsonl` a mano — son append-only, un archivo por autor.",
     ],
     ""
@@ -155,4 +156,64 @@ export function writeCompiledOutputs(cwd: string, compiled: CompiledContext): Co
   fs.writeFileSync(cursorRule, mdc, "utf8");
 
   return { agents, claude, cursorRule };
+}
+
+function formatEventEntry(event: ContextEvent): string {
+  const lines = [
+    `### ${event.timestamp} — ${event.author}`,
+    "",
+    `- **Módulo:** \`${event.module}\``,
+    `- **Intent:** ${event.intent}`,
+  ];
+  if (event.decisions.length) {
+    lines.push("- **Decisiones:**");
+    lines.push(...event.decisions.map((d) => `  - ${d}`));
+  }
+  if (event.gotchas.length) {
+    lines.push("- **Gotchas:**");
+    lines.push(...event.gotchas.map((g) => `  - ${g}`));
+  }
+  return lines.join("\n");
+}
+
+// A diferencia de compile() (vista resumida, con presupuesto de tokens para
+// caber en el contexto de un agente), esta es la vista COMPLETA pensada para
+// lectura humana: todos los eventos de todos los .jsonl, sin recortar nada.
+// Nunca se parsea de vuelta, así que el formato puede ser prosa libre.
+export function compileContextMd(cwd: string = process.cwd()): string {
+  const events = readAllEvents(cwd);
+  const stack = detectStack(cwd);
+
+  const sorted = [...events].sort(
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  );
+
+  const header = [
+    `# ContextCore — ${stack.name}`,
+    "",
+    `- Lenguajes: ${stack.languages.length ? stack.languages.join(", ") : "no detectado"}`,
+    `- Frameworks: ${stack.frameworks.length ? stack.frameworks.join(", ") : "ninguno detectado"}`,
+    `- Gestor de paquetes: ${stack.packageManager ?? "no detectado"}`,
+  ].join("\n");
+
+  const historySection = sorted.length
+    ? sorted.map(formatEventEntry).join("\n\n")
+    : "_Sin eventos registrados todavía. Corre `contextcore capture` tras un commit._";
+
+  return [
+    "<!-- Generado por `contextcore sync` — no editar a mano. -->",
+    "",
+    header,
+    "",
+    `## Historial de contexto (${sorted.length} evento${sorted.length === 1 ? "" : "s"})`,
+    "",
+    historySection,
+    "",
+  ].join("\n");
+}
+
+export function writeContextMd(cwd: string, markdown: string): string {
+  const contextMdPath = path.join(getContextCoreDir(cwd), "context.md");
+  fs.writeFileSync(contextMdPath, markdown, "utf8");
+  return contextMdPath;
 }
