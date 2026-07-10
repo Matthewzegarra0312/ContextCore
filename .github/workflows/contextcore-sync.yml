@@ -35,6 +35,6 @@ jobs:
         run: |
           git config user.name "contextcore-bot"
           git config user.email "contextcore-bot@users.noreply.github.com"
-          git add AGENTS.md CLAUDE.md .cursor/rules/contextcore.mdc
+          git add AGENTS.md CLAUDE.md .cursor/rules/contextcore.mdc .contextcore/context.md
           git diff --cached --quiet || git commit -m "contextcore: sync automático [skip ci]"
           git push
