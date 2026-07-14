@@ -2,6 +2,79 @@
 
 Memoria compartida y viva para agentes de código de equipo. Ver [ContextCore.md](./ContextCore.md) para el plan completo (RAISE Summit Hackathon 2026, Paris, Track Cursor).
 
+## Cómo agregar ContextCore a tu proyecto (guía paso a paso)
+
+Esta sección es para usar ContextCore en **cualquier repo tuyo**, no para desarrollar este monorepo (para eso ver [Desarrollo de este monorepo](#desarrollo-de-este-monorepo) más abajo).
+
+### 1. Instalar e inicializar
+
+Dentro de la carpeta de tu proyecto (debe tener `git init` ya hecho):
+
+```bash
+npx @contextcore/cli init
+```
+
+Esto, en un solo paso:
+
+- Detecta tu stack (lenguajes, frameworks, gestor de paquetes).
+- Crea `.contextcore/` (log de eventos `context.jsonl` + vista completa `context.md`).
+- Instala el hook `post-commit` de git — de ahí en adelante, **cada commit dispara automáticamente** `contextcore capture` + `contextcore sync`, sin que tengas que acordarte de nada.
+- Descarga una sola vez el modelo de IA local (`Qwen2.5-Coder 1.5B`, ~1GB, cacheado en `~/.contextcore/models/` — no se vuelve a descargar aunque uses ContextCore en otros proyectos) y muestra el progreso en consola. Ver el paso 3 si querés desactivar esto.
+
+> Si vas a usar el comando `contextcore` seguido (no `npx`), instalalo global una vez: `npm install -g @contextcore/cli`.
+
+### 2. Uso del día a día (automático)
+
+No hay que hacer nada especial: seguís usando `git commit` como siempre.
+
+```
+git commit -m "tu mensaje"
+        │
+        ▼
+  hook post-commit (instalado en el paso 1)
+        │
+        ├─▶ contextcore capture   (resume el diff: con IA local si está disponible, o con el
+        │                          mensaje del commit + trailers `decision:`/`gotcha:` como fallback)
+        └─▶ contextcore sync      (regenera AGENTS.md, CLAUDE.md, .cursor/rules/, .contextcore/context.md)
+```
+
+`AGENTS.md`/`CLAUDE.md`/`.cursor/rules/contextcore.mdc` quedan siempre al día con lo que el equipo hizo de verdad, para que cualquier agente de código (Cursor, Claude Code, etc.) los lea como contexto persistente.
+
+### 3. Desactivar (parcial o totalmente)
+
+Todo en ContextCore es **best-effort**: si algo no está configurado, se cae a un modo más simple en vez de romper el commit.
+
+| Querés desactivar... | Cómo |
+|---|---|
+| Solo la IA local (queda el fallback con el mensaje del commit) | Variable de entorno `CONTEXTCORE_AI=off` (también valen `false`/`0`) antes de `init` o de cualquier commit. Poniéndola en un `.env` en la raíz del proyecto alcanza. Ni descarga el modelo ni corre inferencia — cero uso de disco/CPU de más. |
+| La sincronización con Supabase (dashboard en vivo) | No definas `SUPABASE_URL`/`SUPABASE_ANON_KEY`. Sin esas variables, todo queda 100% local en `.contextcore/*.jsonl` y `.contextcore/context.md`. |
+| El login de GitHub / CLI | Simplemente no corras `contextcore login`. Sin sesión, el autor de los eventos se toma de `git config user.name` (o de `CONTEXTCORE_AUTHOR`, ver `.env.example`). |
+| Todo ContextCore en el proyecto | Borrá `.contextcore/`, y en `.git/hooks/post-commit` quitá (o borrá el archivo entero si no tenés otro hook) las líneas marcadas con `# contextcore-hook`. |
+
+Para **reactivar** la IA local después de haberla desactivado (o si la primera descarga falló, ej. sin internet), sacá `CONTEXTCORE_AI=off` y volvé a correr `npx @contextcore/cli init` — es idempotente, no reinstala el hook si ya está y solo reintenta la descarga del modelo.
+
+### 4. Login opcional (dashboard en vivo)
+
+Sin login, todo funciona igual (offline, con `.contextcore/context.md` como fuente de verdad). El login solo suma el dashboard web en tiempo real:
+
+```bash
+contextcore login    # abre el navegador, dispositivo-code flow (como `gh auth login`)
+contextcore logout   # cierra la sesión, vuelve al modo anónimo/offline
+```
+
+Si el dashboard no corre en `http://localhost:3000` (por ejemplo, ya está desplegado en Vercel), seteá antes `CONTEXTCORE_WEB_URL=https://tu-app.vercel.app`. Ver la sección [Login (guía paso a paso)](#login-guía-paso-a-paso) más abajo si además querés desplegar tu propia instancia del dashboard con GitHub OAuth + Supabase.
+
+### Comandos disponibles
+
+| Comando | Qué hace |
+|---|---|
+| `contextcore init` | Detecta el stack, crea `.contextcore/`, instala el hook de git, descarga el modelo de IA local |
+| `contextcore capture` | Registra un evento a partir del último commit (IA local o fallback) |
+| `contextcore sync` | Recompila `AGENTS.md`, `CLAUDE.md`, `.cursor/rules/` y `.contextcore/context.md` |
+| `contextcore status` | Última actividad por autor |
+| `contextcore log` | Registra un evento a mano (`--module`, `--intent`, `--decision`, `--gotcha`, `--change`) |
+| `contextcore login` / `logout` | Inicia/cierra sesión con GitHub para el dashboard en vivo |
+
 ## Estructura
 
 ```
@@ -12,10 +85,12 @@ contextcore/
 ├─ demo/                  # repo de ejemplo (git separado, gitignoreado) para la demo split-screen
 ├─ scripts/setup-demo.sh  # regenera demo/ de forma reproducible
 ├─ docs/                  # guion de la demo, checklist de publicación
-└─ .contextcore/          # logs append-only por dev (<autor>.jsonl)
+└─ .contextcore/          # context.jsonl (log compartido, append-only) + context.md (vista compilada)
 ```
 
-## Setup
+## Desarrollo de este monorepo
+
+> Esto es para contribuir a ContextCore. Si solo querés *usarlo* en tu proyecto, ver la guía de arriba.
 
 ```bash
 pnpm install
@@ -24,9 +99,10 @@ pnpm --filter @contextcore/cli dev -- init
 
 ## Login (guía paso a paso)
 
-Login con GitHub para el dashboard (`web/`) y para el CLI (`contextcore login`, estilo `gh auth
-login`). Es 100% opcional — sin hacer nada de esto, el CLI sigue funcionando offline y el dashboard
-sigue mostrando datos de ejemplo. Esta guía es para habilitarlo de verdad.
+Esta guía es para quien **despliega su propia instancia** del dashboard (`web/`) — configurar la
+GitHub OAuth App y Supabase para habilitar `contextcore login` (estilo `gh auth login`) y el login
+del dashboard de verdad. Es 100% opcional — sin hacer nada de esto, el CLI sigue funcionando offline
+y el dashboard sigue mostrando datos de ejemplo.
 
 ### 1. Crear la GitHub OAuth App
 
@@ -127,4 +203,3 @@ Ver `docs/demo-script.md` para el guion de los dos actos.
 ## Estado
 
 Bloques 0–5 completos (CLI, resumen semántico, compilador, automatización git, dashboard, demo). Ver `ContextCore.md` §6 y `docs/publishing.md` para el Bloque 7 (publicar en npm).
- YA KCHE YA
