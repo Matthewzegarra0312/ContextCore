@@ -84,8 +84,10 @@ export const fr: Dictionary = {
   },
   eventRow: {
     in: "dans",
+    change: "Changement\u00a0:",
     decision: "D\u00e9cision\u00a0:",
     gotcha: "Pi\u00e8ge\u00a0:",
+    changeAria: "Changement",
     decisionAria: "D\u00e9cision",
     gotchaAria: "Pi\u00e8ge",
   },

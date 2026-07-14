@@ -7,8 +7,7 @@ Memoria compartida y viva para agentes de código de equipo. Ver [ContextCore.md
 ```
 contextcore/
 ├─ packages/cli/          # paquete npm "@contextcore/cli" (comando: contextcore) — init / sync / status / log / capture / login / logout
-├─ packages/core/         # paquete npm "@contextcore/core" — motor de compilación
-├─ services/summarizer/   # FastAPI: diff -> evento (Python, opcional)
+├─ packages/core/         # paquete npm "@contextcore/core" — motor de compilación + IA local embebida (node-llama-cpp)
 ├─ web/                   # Next.js + Tailwind: landing (/) + dashboard (/dashboard)
 ├─ demo/                  # repo de ejemplo (git separado, gitignoreado) para la demo split-screen
 ├─ scripts/setup-demo.sh  # regenera demo/ de forma reproducible

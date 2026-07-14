@@ -18,3 +18,5 @@ export { buildEventFromLastCommit } from "./captureFromCommit.js";
 export { captureEventViaSummarizer } from "./llmCapture.js";
 export type { HookInstallResult } from "./gitHook.js";
 export { installPostCommitHook } from "./gitHook.js";
+export type { LocalSummary, DownloadProgress } from "./localAi.js";
+export { isAiDisabled, ensureModelDownloaded, getModelCacheDir } from "./localAi.js";

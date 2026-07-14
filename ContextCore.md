@@ -123,8 +123,7 @@ Lo que **queda fuera** (para no morir por scope):
   ```
   contextcore/
   ├─ packages/cli/          # el binario contextcore (TS)
-  ├─ packages/core/         # motor: parseo, compilación (TS)
-  ├─ services/summarizer/   # FastAPI: diff → evento (Python)
+  ├─ packages/core/         # motor: parseo, compilación (TS) + IA local embebida (node-llama-cpp)
   ├─ web/                   # Next.js + Tailwind: landing (/) + dashboard (/dashboard)
   └─ demo/                  # repo de ejemplo para el split-screen
   ```

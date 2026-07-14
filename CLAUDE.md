@@ -10,7 +10,7 @@
 
 ## Trabajo en curso del equipo
 
-- **matthew-stephano-zegarra-ramos** en `.contextcore, .cursor, AGENTS.md (+5 más)`: Conectado Supabase real + fix critico de carga de .env
+- **matthew-stephano-zegarra-ramos** en `.contextcore, .cursor, AGENTS.md (+5 más)`: Automatizacion
 
 ## Decisiones recientes
 

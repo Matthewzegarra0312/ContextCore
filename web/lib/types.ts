@@ -6,4 +6,5 @@ export interface ContextEventRow {
   intent: string;
   decisions: string[];
   gotchas: string[];
+  changes: string[];
 }

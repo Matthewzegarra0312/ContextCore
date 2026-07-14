@@ -25,10 +25,11 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.0"
+    "@supabase/supabase-js": "^2.45.0",
+    "node-llama-cpp": "^3.19.0"
   },
   "devDependencies": {
-    "typescript": "^5.5.4",
-    "@types/node": "^20.14.11"
+    "@types/node": "^20.14.11",
+    "typescript": "^5.5.4"
   }
 }

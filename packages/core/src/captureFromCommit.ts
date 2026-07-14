@@ -28,10 +28,11 @@ function extractTrailers(body: string, key: "decision" | "gotcha"): string[] {
   return out;
 }
 
-// Fallback sin LLM: se usa cuando SUMMARIZER_URL no está configurado o el
-// servicio no responde (ver llmCapture.ts). Usa el mensaje de commit como
-// intent, y trailers "decision:"/"gotcha:" en el cuerpo como convención
-// barata para enriquecer el evento sin depender de la IA.
+// Fallback sin LLM: se usa cuando la IA local no está descargada, está
+// desactivada (CONTEXTCORE_AI=off) o falla (ver llmCapture.ts/localAi.ts).
+// Usa el mensaje de commit como intent, y trailers "decision:"/"gotcha:" en
+// el cuerpo como convención barata para enriquecer el evento sin depender
+// de la IA.
 // Ej: git commit -m "Retry con backoff" -m "decision: sin cola por simplicidad"
 export function buildEventFromLastCommit(cwd: string = process.cwd()): ContextEvent {
   const subject = git("log -1 --pretty=%s", cwd) || "Commit sin mensaje";
@@ -46,5 +47,8 @@ export function buildEventFromLastCommit(cwd: string = process.cwd()): ContextEv
     intent: subject,
     decisions: extractTrailers(body, "decision"),
     gotchas: extractTrailers(body, "gotcha"),
+    // Sin IA no hay forma barata de derivar un changelog literal del diff;
+    // se deja vacío, igual que decisions/gotchas sin trailers.
+    changes: [],
   };
 }

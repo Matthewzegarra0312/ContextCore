@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { detectStack, getContextCoreDir, installPostCommitHook } from "@contextcore/core";
+import { detectStack, ensureModelDownloaded, getContextCoreDir, installPostCommitHook, isAiDisabled } from "@contextcore/core";
 
 export async function init(): Promise<void> {
   const cwd = process.cwd();
@@ -43,5 +43,38 @@ export async function init(): Promise<void> {
     case "not-a-repo":
       console.log("[contextcore init] Aviso: no se detectó .git/ — hook no instalado");
       break;
+  }
+
+  await maybeDownloadAiModel();
+}
+
+// Best-effort: la IA local (node-llama-cpp + Qwen2.5-Coder 1.5B) es una
+// mejora opcional. Si falla la descarga (sin internet, plataforma sin
+// binario compatible, etc.), init termina igual con el hook instalado y la
+// IA queda inactiva hasta que se reintente corriendo `contextcore init` otra vez.
+async function maybeDownloadAiModel(): Promise<void> {
+  if (isAiDisabled()) {
+    console.log("[contextcore init] IA local omitida a propósito (CONTEXTCORE_AI=off)");
+    return;
+  }
+
+  console.log("[contextcore init] Descargando modelo de IA local (Qwen2.5-Coder 1.5B, ~1GB, una sola vez)...");
+  let lastReported = -1;
+  const modelPath = await ensureModelDownloaded((status) => {
+    if (!status.totalSize) return;
+    const percent = Math.floor((status.downloadedSize / status.totalSize) * 100);
+    if (percent >= lastReported + 10) {
+      lastReported = percent;
+      console.log(`[contextcore init] Descarga del modelo: ${percent}%`);
+    }
+  });
+
+  if (modelPath) {
+    console.log(`[contextcore init] Modelo de IA local listo en ${modelPath}`);
+  } else {
+    console.log(
+      "[contextcore init] Aviso: no se pudo descargar el modelo de IA local (sin internet o plataforma no compatible). " +
+        "Los commits seguirán capturándose sin IA hasta que vuelvas a correr `contextcore init`.",
+    );
   }
 }

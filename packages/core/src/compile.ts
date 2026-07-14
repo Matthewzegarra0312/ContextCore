@@ -165,6 +165,13 @@ function formatEventEntry(event: ContextEvent): string {
     `- **Módulo:** \`${event.module}\``,
     `- **Intent:** ${event.intent}`,
   ];
+  // Backward-compat: líneas de context.jsonl escritas antes de que existiera
+  // este campo no lo tienen (JSON.parse las deja sin "changes").
+  const changes = event.changes ?? [];
+  if (changes.length) {
+    lines.push("- **Cambios:**");
+    lines.push(...changes.map((c) => `  - ${c}`));
+  }
   if (event.decisions.length) {
     lines.push("- **Decisiones:**");
     lines.push(...event.decisions.map((d) => `  - ${d}`));

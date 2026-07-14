@@ -9,8 +9,13 @@ create table if not exists context_events (
   intent text not null,
   decisions text[] not null default '{}',
   gotchas text[] not null default '{}',
+  changes text[] not null default '{}',
   created_at timestamptz not null default now()
 );
+
+-- Columna agregada después del lanzamiento inicial (changelog literal del
+-- summarizer local); idempotente para proyectos que ya tenían la tabla creada.
+alter table context_events add column if not exists changes text[] not null default '{}';
 
 -- Sin esto, el dashboard no recibe INSERTs por websocket (Realtime es opt-in por tabla).
 alter publication supabase_realtime add table context_events;

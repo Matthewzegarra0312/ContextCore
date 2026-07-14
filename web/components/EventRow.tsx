@@ -57,6 +57,33 @@ export function EventRow({ event, index = 0 }: { event: ContextEventRow; index?:
           {event.intent}
         </div>
 
+        {/* Changes */}
+        {event.changes.length > 0 && (
+          <ul className="mt-1.5 space-y-1">
+            {event.changes.map((c, i) => (
+              <li
+                key={i}
+                className="flex items-start gap-1.5 text-xs"
+              >
+                <span
+                  className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded text-[10px]"
+                  style={{
+                    background: "color-mix(in srgb, #10b981 15%, transparent)",
+                    color: "#10b981",
+                  }}
+                  aria-label={t("eventRow.changeAria")}
+                >
+                  📝
+                </span>
+                <span className="text-[var(--text-muted)]">
+                  <span className="font-medium text-[#10b981]">{t("eventRow.change")}</span>{" "}
+                  {c}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+
         {/* Decisions */}
         {event.decisions.length > 0 && (
           <ul className="mt-1.5 space-y-1">

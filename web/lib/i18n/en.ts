@@ -82,8 +82,10 @@ export const en = {
   },
   eventRow: {
     in: "in",
+    change: "Change:",
     decision: "Decision:",
     gotcha: "Gotcha:",
+    changeAria: "Change",
     decisionAria: "Decision",
     gotchaAria: "Gotcha",
   },
