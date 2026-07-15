@@ -7,7 +7,7 @@ import { useLocale } from "@/lib/i18n";
 export function ActivityCard({ event, index = 0 }: { event: ContextEventRow; index?: number }) {
   const locale = useLocale();
   const color = authorColorVar(event.author);
-
+//pruebas para ver si se actualiza el codigo
   // Empieza en `false` (igual en servidor y cliente) y se corrige recién
   // después de montar. Si se calculara directo con Date.now() en el render,
   // el servidor y el cliente casi nunca coinciden exactamente y React tira
