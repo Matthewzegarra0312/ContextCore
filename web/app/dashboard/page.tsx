@@ -21,6 +21,19 @@ import { useLocale, useT } from "@/lib/i18n";
 
 const EVENT_LIMIT = 200;
 
+// PostgREST puede tardar unos segundos en refrescar su caché de esquema
+// después de un `alter table` (ver supabase/schema.sql); mientras tanto,
+// una fila real puede llegar sin el campo `changes`/`decisions`/`gotchas`.
+// Normalizamos siempre a array para que la UI nunca reciba `undefined`.
+function normalizeEvent(raw: ContextEventRow): ContextEventRow {
+  return {
+    ...raw,
+    changes: raw.changes ?? [],
+    decisions: raw.decisions ?? [],
+    gotchas: raw.gotchas ?? [],
+  };
+}
+
 // ─── Section heading ──────────────────────────────────────────────────────────
 
 function SectionHeading({
@@ -77,7 +90,7 @@ export default function DashboardPage() {
       .order("timestamp", { ascending: false })
       .limit(EVENT_LIMIT)
       .then(({ data }) => {
-        if (active && data) setEvents(data as ContextEventRow[]);
+        if (active && data) setEvents((data as ContextEventRow[]).map(normalizeEvent));
       });
 
     const channel = supabase
@@ -87,7 +100,7 @@ export default function DashboardPage() {
         { event: "INSERT", schema: "public", table: "context_events" },
         (payload) => {
           setEvents((prev) =>
-            [payload.new as ContextEventRow, ...prev].slice(0, EVENT_LIMIT)
+            [normalizeEvent(payload.new as ContextEventRow), ...prev].slice(0, EVENT_LIMIT)
           );
         }
       )

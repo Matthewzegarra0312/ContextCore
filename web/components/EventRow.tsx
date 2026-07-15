@@ -58,9 +58,9 @@ export function EventRow({ event, index = 0 }: { event: ContextEventRow; index?:
         </div>
 
         {/* Changes */}
-        {event.changes.length > 0 && (
+        {(event.changes ?? []).length > 0 && (
           <ul className="mt-1.5 space-y-1">
-            {event.changes.map((c, i) => (
+            {(event.changes ?? []).map((c, i) => (
               <li
                 key={i}
                 className="flex items-start gap-1.5 text-xs"
@@ -85,9 +85,9 @@ export function EventRow({ event, index = 0 }: { event: ContextEventRow; index?:
         )}
 
         {/* Decisions */}
-        {event.decisions.length > 0 && (
+        {(event.decisions ?? []).length > 0 && (
           <ul className="mt-1.5 space-y-1">
-            {event.decisions.map((d, i) => (
+            {(event.decisions ?? []).map((d, i) => (
               <li
                 key={i}
                 className="flex items-start gap-1.5 text-xs"
@@ -112,9 +112,9 @@ export function EventRow({ event, index = 0 }: { event: ContextEventRow; index?:
         )}
 
         {/* Gotchas */}
-        {event.gotchas.length > 0 && (
+        {(event.gotchas ?? []).length > 0 && (
           <ul className="mt-1 space-y-1">
-            {event.gotchas.map((g, i) => (
+            {(event.gotchas ?? []).map((g, i) => (
               <li
                 key={i}
                 className="flex items-start gap-1.5 text-xs"
