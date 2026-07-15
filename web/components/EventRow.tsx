@@ -47,7 +47,9 @@ export function EventRow({ event, index = 0 }: { event: ContextEventRow; index?:
           >
             {event.module}
           </span>
-          <span className="ml-auto text-xs text-[var(--text-muted)]">
+          {/* suppressHydrationWarning: tiempo relativo (Date.now()), difiere
+              legítimamente entre SSR e hidratación — ver React #418/#425. */}
+          <span className="ml-auto text-xs text-[var(--text-muted)]" suppressHydrationWarning>
             {relativeTime(event.timestamp, locale)}
           </span>
         </div>

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { ContextEventRow } from "@/lib/types";
 import { authorColorVar, authorInitial } from "@/lib/authorColor";
 import { relativeTime } from "@/lib/relativeTime";
@@ -6,7 +7,15 @@ import { useLocale } from "@/lib/i18n";
 export function ActivityCard({ event, index = 0 }: { event: ContextEventRow; index?: number }) {
   const locale = useLocale();
   const color = authorColorVar(event.author);
-  const isRecent = Date.now() - new Date(event.timestamp).getTime() < 5 * 60_000;
+
+  // Empieza en `false` (igual en servidor y cliente) y se corrige recién
+  // después de montar. Si se calculara directo con Date.now() en el render,
+  // el servidor y el cliente casi nunca coinciden exactamente y React tira
+  // un hydration mismatch (a veces escala a página en blanco, ver #418/#423).
+  const [isRecent, setIsRecent] = useState(false);
+  useEffect(() => {
+    setIsRecent(Date.now() - new Date(event.timestamp).getTime() < 5 * 60_000);
+  }, [event.timestamp]);
 
   return (
     <div
@@ -60,7 +69,7 @@ export function ActivityCard({ event, index = 0 }: { event: ContextEventRow; ind
           </span>
         </div>
 
-        <span className="shrink-0 text-xs text-[var(--text-muted)]">
+        <span className="shrink-0 text-xs text-[var(--text-muted)]" suppressHydrationWarning>
           {relativeTime(event.timestamp, locale)}
         </span>
       </div>

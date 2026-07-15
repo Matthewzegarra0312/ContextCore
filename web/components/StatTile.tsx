@@ -65,9 +65,13 @@ export function StatTile({
       </div>
 
       <div className="truncate text-xs text-[var(--text-muted)]">{label}</div>
+      {/* suppressHydrationWarning: para el stat de "última actividad" el valor es
+          un tiempo relativo (Date.now()), que legítimamente difiere entre el
+          render del servidor y la hidratación del cliente — ver React #418/#425. */}
       <div
         className="mt-0.5 truncate text-2xl font-bold tracking-tight sm:text-3xl"
         style={{ color: accent }}
+        suppressHydrationWarning
       >
         {displayValue}
       </div>
