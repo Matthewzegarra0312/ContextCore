@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
-
+//pruebas para ver si se actualiza usando github desktop
 // Recibe el redirect de Supabase tras el login con GitHub (PKCE), intercambia
 // el `code` por una sesión (guardada en cookies) y manda al usuario a donde
 // venía — el dashboard, o `/cli-login?code=...` si el login empezó desde el CLI.

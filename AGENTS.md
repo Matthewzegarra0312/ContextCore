@@ -10,7 +10,7 @@
 
 ## Trabajo en curso del equipo
 
-- **matthew-stephano-zegarra-ramos** en `.contextcore`: Automatizacion
+- **matthew-stephano-zegarra-ramos** en `web/components/ActivityCard.tsx`: Añadido un comentario para validar el resumen IA
 
 ## Decisiones recientes
 
