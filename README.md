@@ -11,17 +11,32 @@ Esta sección es para usar ContextCore en **cualquier repo tuyo**, no para desar
 Dentro de la carpeta de tu proyecto (debe tener `git init` ya hecho):
 
 ```bash
+npm install -D @contextcore/cli
+npx contextcore init
+```
+
+O en un solo paso sin agregar al `package.json`:
+
+```bash
 npx @contextcore/cli init
 ```
 
-Esto, en un solo paso:
+**¿Cuándo se baja el modelo de IA (~1GB)?** No va dentro del paquete npm (sería enorme). Se descarga sola desde Hugging Face y se cachea en `~/.contextcore/models/` (una vez por máquina, no por proyecto):
+
+- Al hacer `npm install -D @contextcore/cli` (script `postinstall` del paquete publicado en npm).
+- Al correr `npx @contextcore/cli init` (por si el postinstall falló o usaste solo `npx` sin install).
+
+> Necesitás la versión **0.1.1+** en npm con IA local embebida. Si instalaste `@contextcore/cli@0.1.0`, no trae esto — actualizá o publicá la nueva versión (ver `docs/publishing.md`).
+
+> Si vas a usar el comando `contextcore` seguido (no `npx`), el `npm install -D @contextcore/cli` de arriba ya alcanza.
+
+### Qué hace `init` (además de la descarga del modelo)
 
 - Detecta tu stack (lenguajes, frameworks, gestor de paquetes).
 - Crea `.contextcore/` (log de eventos `context.jsonl` + vista completa `context.md`).
-- Instala el hook `post-commit` de git — de ahí en adelante, **cada commit dispara automáticamente** `contextcore capture` + `contextcore sync`, sin que tengas que acordarte de nada.
-- Descarga una sola vez el modelo de IA local (`Qwen2.5-Coder 1.5B`, ~1GB, cacheado en `~/.contextcore/models/` — no se vuelve a descargar aunque uses ContextCore en otros proyectos) y muestra el progreso en consola. Ver el paso 3 si querés desactivar esto.
-
-> Si vas a usar el comando `contextcore` seguido (no `npx`), instalalo global una vez: `npm install -g @contextcore/cli`.
+- Instala el hook `post-commit` — de ahí en adelante, **cada commit dispara automáticamente** `contextcore capture` + `contextcore sync`.
+- Reintenta la descarga del modelo si el `postinstall` de `npm install` no la completó (idempotente).
+- En el monorepo de ContextCore, `pnpm install` ya instala el hook vía `prepare` (sin descargar el modelo en cada install de dev).
 
 ### 2. Uso del día a día (automático)
 

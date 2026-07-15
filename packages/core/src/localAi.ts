@@ -106,8 +106,8 @@ export interface DownloadProgress {
 /**
  * Descarga el modelo GGUF una sola vez (cacheado globalmente). No-op si ya
  * existe (skipExisting nativo del downloader) o si la IA está desactivada.
- * Solo debe llamarse desde `contextcore init` — nunca desde una ruta que
- * corra en cada commit.
+ * Solo debe llamarse desde `contextcore init` o el postinstall de
+ * `@contextcore/cli` — nunca desde una ruta que corra en cada commit.
  */
 export async function ensureModelDownloaded(
   onProgress?: (status: DownloadProgress) => void,
@@ -135,6 +135,11 @@ export async function ensureModelDownloaded(
 function getCachedModelPathIfExists(): string | null {
   const modelPath = getModelPath();
   return fs.existsSync(modelPath) ? modelPath : null;
+}
+
+/** True si el GGUF ya está en ~/.contextcore/models/ (no hace red). */
+export function isModelCached(): boolean {
+  return getCachedModelPathIfExists() !== null;
 }
 
 // Singletons a nivel de módulo: `getLlama()`/`loadModel()` son costosos, y un

@@ -62,9 +62,18 @@ npm install -D @contextcore/cli
 npx contextcore init
 ```
 
+Tras `npm install`, el paquete corre un `postinstall` que descarga el modelo GGUF
+(~1GB, cache global en `~/.contextcore/models/`) si aún no existe. `init` reintenta
+si falló (sin internet, etc.). Requiere versión **0.1.1+** en el registro.
+
 Después de ese install, todo `npx contextcore ...` (incluido el que dispara el
 hook `post-commit`) resuelve local via `node_modules/.bin/contextcore` — no
 vuelve a pegarle al registro.
+
+**pnpm en el proyecto del usuario:** si usan pnpm, agregar en su `pnpm-workspace.yaml`
+(o `.npmrc` equivalente) `allowBuilds: node-llama-cpp: true` y correr
+`pnpm rebuild node-llama-cpp` — sin eso los binarios nativos de la IA no compilan.
+Con npm puro no hace falta ese paso extra.
 
 ## Verificar
 

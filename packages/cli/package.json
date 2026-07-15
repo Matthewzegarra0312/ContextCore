@@ -1,6 +1,6 @@
 {
   "name": "@contextcore/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Memoria compartida y viva para los agentes de código de tu equipo — mantiene AGENTS.md/CLAUDE.md/.cursor/rules sincronizados con lo que el equipo está haciendo de verdad.",
   "type": "module",
   "bin": {
@@ -8,7 +8,8 @@
   },
   "main": "./dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "scripts/postinstall-model.mjs"
   ],
   "keywords": [
     "agents.md",
@@ -34,6 +35,7 @@
     "build": "tsc -p tsconfig.json",
     "dev": "tsx src/index.ts",
     "gen:logo": "node scripts/gen-logo.mjs",
+    "postinstall": "node scripts/postinstall-model.mjs",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {

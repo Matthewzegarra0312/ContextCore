@@ -1,6 +1,6 @@
 {
   "name": "@contextcore/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Motor de ContextCore: detección de stack, storage append-only, compilador multi-formato (AGENTS.md/CLAUDE.md/.cursor/rules). Usado por el paquete `contextcore` (CLI).",
   "type": "module",
   "main": "./dist/index.js",
