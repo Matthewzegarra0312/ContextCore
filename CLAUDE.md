@@ -10,7 +10,7 @@
 
 ## Trabajo en curso del equipo
 
-- **matthew-stephano-zegarra-ramos** en `.contextcore, .cursor, AGENTS.md (+5 más)`: Automatizacion
+- **matthew-stephano-zegarra-ramos** en `.contextcore`: Automatizacion
 
 ## Decisiones recientes
 
