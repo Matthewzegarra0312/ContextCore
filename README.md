@@ -218,3 +218,4 @@ Ver `docs/demo-script.md` para el guion de los dos actos.
 ## Estado
 
 Bloques 0–5 completos (CLI, resumen semántico, compilador, automatización git, dashboard, demo). Ver `ContextCore.md` §6 y `docs/publishing.md` para el Bloque 7 (publicar en npm).
+..........
